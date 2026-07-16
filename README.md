@@ -6,6 +6,14 @@ The idea: bring your own LLM, run it on your hardware, and have it be the surfac
 
 ---
 
+## 🌐 Cerebra — now public
+
+[**cerebra**](https://github.com/meloliva14/cerebra) · your Obsidian vault as a living 3D brain.
+
+Semantic UMAP layout, HDBSCAN lobes, a grounded local-LLM Resident you can chat with, and cinematic in-app tours — clone it and fly through your own notes. Runs 100% local. `Electron · three.js · Python`
+
+---
+
 ## The trio
 
 ```
