@@ -17,6 +17,12 @@ Contributor to [**x402-foundation/x402**](https://github.com/x402-foundation/x40
 
 I also work on client-side payment hardening (spend caps, chain pinning, asset pinning), file ecosystem bug reports where I find them, and measure the network **on-chain** rather than trusting dashboards.
 
+→ [**x402-measure**](https://github.com/meloliva14/x402-measure) — tools to measure the x402 network from public data. No wallet, no key, no payment ever sent; Python standard library only.
+
+Across 1,120 live sellers: **83%** serve a payment challenge a standard client can actually sign, **58%** publish both a registry listing and their own manifest — and **62% of those manifests declare no protocol version at all**, which matters because x402 v1 and v2 don't degrade into each other. A client that guesses wrong doesn't get a downgrade, it gets nothing.
+
+The same repo answers the question a seller can't answer from their own funnel: *did nobody want it, or could nobody pay?* Those look identical from the inside and have completely different fixes.
+
 ---
 
 ## 🛡️ VerityLayer · verification for AI agents
