@@ -18,7 +18,7 @@ What it has found, every figure dated and recomputable from the repo:
 
 - **91.6%** of payment-gated hosts are fully conformant (1,193 of 1,302, 2026-08-16). The network is in better shape than the discourse suggests.
 - **972 of 1,521** hosts publish a discovery manifest. **Zero** of them serve a cryptographically signed one.
-- **811** gated hosts answered with a payout address, resolving to **379** distinct addresses. One address serves **144** hosts, so counting sellers per host overstates badly.
+- **811** gated hosts answered with a payout address, resolving to **379** distinct addresses. One address serves **144** hosts, so counting sellers per host overstates badly. Counting the other way is worse: a shared address does not establish a shared operator, so distinct addresses is neither a ceiling nor a floor on distinct parties.
 
 Figures from the census are cited in the discovery specification work ([PR #2979](https://github.com/x402-foundation/x402/pull/2979)) by the author of the IETF Internet-Draft on x402 DNS discovery, who now runs a second independent observer against the same pinned host list so the two columns can be diffed daily.
 
