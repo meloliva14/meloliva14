@@ -10,21 +10,33 @@ New Jersey.
 
 Contributor to [**x402-foundation/x402**](https://github.com/x402-foundation/x402), the open standard for agent-to-server payments.
 
+**I run a daily, signed, append-only census of the network.**
+
+→ [**x402-measure**](https://github.com/meloliva14/x402-measure) — 1,521 hosts, one unauthenticated request each. No wallet, no key, nothing ever paid. Every day's observation is Ed25519-signed and verifies against a published key with a short, dependency-free verifier. **Nine consecutive days as of 2026-08-16, no gaps.**
+
+What it has found, every figure dated and recomputable from the repo:
+
+- **91.6%** of payment-gated hosts are fully conformant (1,193 of 1,302, 2026-08-16). The network is in better shape than the discourse suggests.
+- **972 of 1,521** hosts publish a discovery manifest. **Zero** of them serve a cryptographically signed one.
+- **811** gated hosts answered with a payout address, resolving to **379** distinct addresses. One address serves **144** hosts, so counting sellers per host overstates badly.
+
+Figures from the census are cited in the discovery specification work ([PR #2979](https://github.com/x402-foundation/x402/pull/2979)) by the author of the IETF Internet-Draft on x402 DNS discovery, who now runs a second independent observer against the same pinned host list so the two columns can be diffed daily.
+
+Three open submissions in the x402 Foundation identity working group:
+[#14](https://github.com/x402-foundation/wg-identity/issues/14) what is measurably checkable about a payee and why none of it is identity ·
+[#15](https://github.com/x402-foundation/wg-identity/issues/15) how grouping by shared payout address launders an attribution claim ·
+[#16](https://github.com/x402-foundation/wg-identity/issues/16) DNS TXT key authorization, verified against a live implementation as an unrelated third party
+
 **Root-caused a silent, ecosystem-wide payment regression.** Coinbase's CDP facilitator had begun rejecting spec-compliant x402 v2 payloads with an opaque `400 invalid_request`. I isolated it to an **undocumented 500-character cap** on `resource.description` — probing with free unfunded keys, then delta-debugging to the exact boundary. Confirmed by a core maintainer; the CDP team updated their documentation as a result.
 
 → [**issue #2832**](https://github.com/x402-foundation/x402/issues/2832) — closed as completed, maintainer-confirmed · 20 comments
 → [PR #2837](https://github.com/x402-foundation/x402/pull/2837) — opt-in interop hardening for strict facilitators
 
-I also work on client-side payment hardening (spend caps, chain pinning, asset pinning), file ecosystem bug reports where I find them, and measure the network **on-chain** rather than trusting dashboards.
+I also work on client-side payment hardening (spend caps, chain pinning, asset pinning) and file ecosystem bug reports where I find them.
 
-→ [**x402-measure**](https://github.com/meloliva14/x402-measure) — tools to measure the x402 network from public data. No wallet, no key, no payment ever sent; Python standard library only.
-
-Across 1,120 live sellers: **83%** serve a payment challenge a standard client can actually sign, **58%** publish both a registry listing and their own manifest — and **62% of those manifests declare no protocol version at all**, which matters because x402 v1 and v2 don't degrade into each other. A client that guesses wrong doesn't get a downgrade, it gets nothing.
-
-The same repo answers the question a seller can't answer from their own funnel: *did nobody want it, or could nobody pay?* Those look identical from the inside and have completely different fixes.
+The census also answers the question a seller cannot answer from their own funnel: *did nobody want it, or could nobody pay?* Those look identical from the inside and have completely different fixes.
 
 ---
-
 ## 🛡️ VerityLayer · verification for AI agents
 
 An independent, fail-closed second opinion immediately before an agent does something irreversible. Fact-check a claim, screen untrusted text for prompt-injection, or gate an action — **allow / review / block**. Every verdict is Ed25519-signed and **independently re-verifiable offline** against a published key, so you never have to trust the issuer. Pay-per-call over x402 (USDC on Base) — no accounts, no subscriptions.
