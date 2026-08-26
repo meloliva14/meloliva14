@@ -12,13 +12,17 @@ Contributor to [**x402-foundation/x402**](https://github.com/x402-foundation/x40
 
 **I run a daily, signed, append-only census of the network.**
 
-→ [**x402-measure**](https://github.com/meloliva14/x402-measure) — 1,521 hosts, one unauthenticated request each. No wallet, no key, nothing ever paid. Every day's observation is Ed25519-signed and verifies against a published key with a short, dependency-free verifier. **Nine consecutive days as of 2026-08-16, no gaps.**
+→ [**x402-measure**](https://github.com/meloliva14/x402-measure) — 1,521 hosts, one unauthenticated request each. No wallet, no key, nothing ever paid. Every day's observation is Ed25519-signed and verifies against a published key with a short, dependency-free verifier. **Eighteen consecutive days as of 2026-08-25, no gaps.**
 
 What it has found, every figure dated and recomputable from the repo:
 
-- **91.6%** of payment-gated hosts are fully conformant (1,193 of 1,302, 2026-08-16). The network is in better shape than the discourse suggests.
+- **91.3%** of payment-gated hosts are fully conformant (1,211 of 1,326, 2026-08-25; it read 91.6% on 2026-08-16). The network is in better shape than the discourse suggests.
 - **972 of 1,521** hosts publish a discovery manifest. **Zero** of them serve a cryptographically signed one.
 - **811** gated hosts answered with a payout address, resolving to **379** distinct addresses. One address serves **144** hosts, so counting sellers per host overstates badly. Counting the other way is worse: a shared address does not establish a shared operator, so distinct addresses is neither a ceiling nor a floor on distinct parties.
+
+**The instrument gets audited too, in public.** A failed fetch can only move a host toward `UNREACHABLE` and never toward `OK`, so transport failure invents state transitions and never hides them. That bias put two wrong numbers into my own published figures before I caught it. I corrected both on the thread with the hosts named, replaced the hand-count with [`flap_census.py`](https://github.com/meloliva14/x402-measure/blob/main/flap_census.py) (46 flap events across 38 hosts in 18 days, 92 recorded transitions that are not state changes), and shipped a retry rule so the sweep stops manufacturing them. Every observation carries a hash of the method, and that hash moves when the method moves, so a reader can separate a method change from a network change without asking me.
+
+That habit is why the numbers get used. The rule it produced, that a signed observation is evidence the issuer observed something and never that the observation was correct, has been taken up by other implementers in the Foundation's [evidence-record working group](https://github.com/x402-foundation/tsc/issues/4). One of them applied it to a problem I never touched, comparing two canonicalization schemes rather than probing hosts, found the same one-directional error there, and rewrote a rule in their own specification to it.
 
 Figures from the census are cited in the discovery specification work ([PR #2979](https://github.com/x402-foundation/x402/pull/2979)) by the author of the IETF Internet-Draft on x402 DNS discovery, who now runs a second independent observer against the same pinned host list so the two columns can be diffed daily.
 
