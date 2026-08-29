@@ -1,6 +1,6 @@
 # Mel · he/him
 
-Independent engineer. I ship production systems solo — AI agent infrastructure, local-first AI, and field-service SaaS.
+Independent principal engineer. I ship production systems solo: agent infrastructure, local-first AI, and field-service SaaS. I also measure protocol networks from public data, and the measurements are the part other people build on.
 
 New Jersey.
 
@@ -12,26 +12,31 @@ Contributor to [**x402-foundation/x402**](https://github.com/x402-foundation/x40
 
 **I run a daily, signed, append-only census of the network.**
 
-→ [**x402-measure**](https://github.com/meloliva14/x402-measure) — 1,521 hosts, one unauthenticated request each. No wallet, no key, nothing ever paid. Every day's observation is Ed25519-signed and verifies against a published key with a short, dependency-free verifier. **Eighteen consecutive days as of 2026-08-25, no gaps.**
+→ [**x402-measure**](https://github.com/meloliva14/x402-measure) — 1,521 hosts, one unauthenticated request each. No wallet, no key, nothing ever paid. Every day's observation is Ed25519-signed and verifies against a published key with a short, dependency-free verifier. **Twenty-two consecutive days as of 2026-08-29, no gaps.**
 
 What it has found, every figure dated and recomputable from the repo:
 
-- **91.3%** of payment-gated hosts are fully conformant (1,211 of 1,326, 2026-08-25; it read 91.6% on 2026-08-16). The network is in better shape than the discourse suggests.
+- **91.5%** of payment-gated hosts are fully conformant (1,201 of 1,313, 2026-08-29; it read 91.3% on 2026-08-25 and 91.6% on 2026-08-16). The network is in better shape than the discourse suggests.
 - **972 of 1,521** hosts publish a discovery manifest. **Zero** of them serve a cryptographically signed one.
 - **811** gated hosts answered with a payout address, resolving to **379** distinct addresses. One address serves **144** hosts, so counting sellers per host overstates badly. Counting the other way is worse: a shared address does not establish a shared operator, so distinct addresses is neither a ceiling nor a floor on distinct parties.
+- **67 live hosts that the central discovery index does not list** (`klymax402.com` 50, `x402.press` 11, `gedx402.com` 6), each answering a payable 402. The same index retained a host that read `NO_402` on all 21 days it was listed. Absence from an index is not evidence of absence, and presence is not evidence of liveness. Run [`verify_67.py`](https://github.com/meloliva14/x402-measure/blob/main/verify_67.py) to reproduce every row from files in the repo.
+- **A churn rate is a cohort measurement in disguise.** Across four clean windows, host-level verdict change runs 0.53% (32 changes over 6,084 host-days). Collapse to registrable domain and it runs *higher*, 0.87% (23 over 2,652 operator-days), because collapsing cuts the numerator by 28% and the denominator by 56%. A rate has to state its unit on both halves or it is not measuring anything.
+- **Grouping by hostname cannot find the operator.** In a complete index harvest (2026-07-26, 14,364 rows), **131 of 1,191 payout addresses are paid across two or more registrable domains**, touching **160 of 663 domains**. One address spans eight. Domain collapse splits one operator into many, address collapse merges many operators into one, and neither bounds the other's error.
 
-**The instrument gets audited too, in public.** A failed fetch can only move a host toward `UNREACHABLE` and never toward `OK`, so transport failure invents state transitions and never hides them. That bias put two wrong numbers into my own published figures before I caught it. I corrected both on the thread with the hosts named, replaced the hand-count with [`flap_census.py`](https://github.com/meloliva14/x402-measure/blob/main/flap_census.py) (46 flap events across 38 hosts in 18 days, 92 recorded transitions that are not state changes), and shipped a retry rule so the sweep stops manufacturing them. Every observation carries a hash of the method, and that hash moves when the method moves, so a reader can separate a method change from a network change without asking me.
+**The instrument gets audited too, in public.** A failed fetch can only move a host toward `UNREACHABLE` and never toward `OK`, so transport failure invents state transitions and never hides them. That bias put two wrong numbers into my own published figures before I caught it. I corrected both on the thread with the hosts named, replaced the hand-count with [`flap_census.py`](https://github.com/meloliva14/x402-measure/blob/main/flap_census.py) (52 flap events across 41 hosts in 22 days, 104 recorded transitions that are not state changes), and shipped a retry rule so the sweep stops manufacturing them. Every observation carries a hash of the method, and that hash moves when the method moves, so a reader can separate a method change from a network change without asking me.
+
+I publish the corrections the same way I publish the findings, including the ones that are mine. When I misread which figure a collaborator had already withdrawn themselves, I said so on the thread rather than let the record stand.
 
 That habit is why the numbers get used. The rule it produced, that a signed observation is evidence the issuer observed something and never that the observation was correct, has been taken up by other implementers in the Foundation's [evidence-record working group](https://github.com/x402-foundation/tsc/issues/4). One of them applied it to a problem I never touched, comparing two canonicalization schemes rather than probing hosts, found the same one-directional error there, and rewrote a rule in their own specification to it.
 
-Figures from the census are cited in the discovery specification work ([PR #2979](https://github.com/x402-foundation/x402/pull/2979)) by the author of the IETF Internet-Draft on x402 DNS discovery, who now runs a second independent observer against the same pinned host list so the two columns can be diffed daily.
+Figures from the census are cited in the discovery specification work ([PR #2979](https://github.com/x402-foundation/x402/pull/2979)) by the author of the IETF Internet-Draft on x402 DNS discovery, who now runs a second independent observer against the same pinned host list so the two columns can be diffed daily. Where the proposed normative text says to aggregate by the Public Suffix List, I measured what that sentence actually does: run the published list in full and the intended effect drops from 28% to 9%, because the private section makes every platform tenant its own registrable domain. The rule has to name the ICANN section or it is a no-op on exactly the platforms it exists to collapse across.
 
 Three open submissions in the x402 Foundation identity working group:
 [#14](https://github.com/x402-foundation/wg-identity/issues/14) what is measurably checkable about a payee and why none of it is identity ·
 [#15](https://github.com/x402-foundation/wg-identity/issues/15) how grouping by shared payout address launders an attribution claim ·
 [#16](https://github.com/x402-foundation/wg-identity/issues/16) DNS TXT key authorization, verified against a live implementation as an unrelated third party
 
-**Root-caused a silent, ecosystem-wide payment regression.** Coinbase's CDP facilitator had begun rejecting spec-compliant x402 v2 payloads with an opaque `400 invalid_request`. I isolated it to an **undocumented 500-character cap** on `resource.description` — probing with free unfunded keys, then delta-debugging to the exact boundary. Confirmed by a core maintainer; the CDP team updated their documentation as a result.
+**Root-caused a silent, ecosystem-wide payment regression.** Coinbase's CDP facilitator had begun rejecting spec-compliant x402 v2 payloads with an opaque `400 invalid_request`. I isolated it to an **undocumented 500-character cap** on `resource.description` — probing with free unfunded keys, then delta-debugging to the exact boundary. Confirmed by a core maintainer; the CDP team updated their documentation as a result. Four independent operators later reported the same fix working on their own deployments, one with an on-chain settlement to show for it.
 
 → [**issue #2832**](https://github.com/x402-foundation/x402/issues/2832) — closed as completed, maintainer-confirmed · 20 comments
 → [PR #2837](https://github.com/x402-foundation/x402/pull/2837) — opt-in interop hardening for strict facilitators
@@ -69,7 +74,7 @@ Renders a knowledge vault as a navigable 3D brain: semantic UMAP layout, HDBSCAN
 **PC Brain** — a local-first AI operating layer for Windows. Bring your own model; it runs on your hardware, and your data never leaves the box. In active private development.
 → [pcbrain.ai](https://pcbrain.ai) · [landing source](https://github.com/meloliva14/PCBrain-Landing)
 
-**Field-service SaaS** — a full operations platform for a service trade: scheduling, routing, billing, and native iOS + Android apps for crews in the field. Private.
+**Field-service SaaS** — a full operations platform for a service trade: scheduling, routing, billing, and native iOS + Android apps for crews in the field, both live in the stores. Built by someone who has worked the trade. Private.
 
 **Websites** — design and build, start to finish.
 
